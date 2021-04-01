@@ -80,7 +80,8 @@ namespace ComicBookLibraryManagerWebApp.Controllers
                 var comicBook = viewModel.ComicBook;
                 comicBook.AddArtist(viewModel.ArtistId, viewModel.RoleId);
 
-                // TODO Add the comic book.
+                _context.ComicBooks.Add(comicBook);
+                _context.SaveChanges();
 
                 TempData["Message"] = "Your comic book was successfully added!";
 
@@ -100,8 +101,9 @@ namespace ComicBookLibraryManagerWebApp.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            // TODO Get the comic book.
-            var comicBook = new ComicBook();
+            var comicBook = _context.ComicBooks
+                .Where(cb => cb.Id == id)
+                .SingleOrDefault();
 
             if (comicBook == null)
             {
@@ -126,7 +128,8 @@ namespace ComicBookLibraryManagerWebApp.Controllers
             {
                 var comicBook = viewModel.ComicBook;
 
-                // TODO Update the comic book.
+                _context.Entry(comicBook).State = EntityState.Modified;
+                _context.SaveChanges();
 
                 TempData["Message"] = "Your comic book was successfully updated!";
 
