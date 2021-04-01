@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,10 +18,14 @@ namespace ComicBookShared.Models
         }
 
         public int Id { get; set; }
+        [Display(Name = "Series")]
         public int SeriesId { get; set; }
+        [Display(Name = "Issue Number")]
         public int IssueNumber { get; set; }
         public string Description { get; set; }
+        [Display(Name = "Published On")]
         public DateTime PublishedOn { get; set; }
+        [Display(Name = "Average Rating")]
         public decimal? AverageRating { get; set; }
 
         public Series Series { get; set; }
@@ -48,6 +53,20 @@ namespace ComicBookShared.Models
             {
                 Artist = artist,
                 Role = role
+            });
+        }
+
+        /// <summary>
+        /// Adds an artist to the comic book.
+        /// </summary>
+        /// <param name="artistId">The artist ID to add.</param>
+        /// <param name="roleId">The role ID that the artist had on this comic book.</param>
+        public void AddArtist(int artistId, int roleId)
+        {
+            Artists.Add(new ComicBookArtist()
+            {
+                ArtistId = artistId,
+                RoleId = roleId
             });
         }
     }
