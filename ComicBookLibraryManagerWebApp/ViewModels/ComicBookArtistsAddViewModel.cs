@@ -12,7 +12,7 @@ namespace ComicBookLibraryManagerWebApp.ViewModels
     /// <summary>
     /// The view model for the "Add Comic Book Artist" view.
     /// </summary>
-    public class ComicBookArtistsAddViewModel
+    public class ComicBookArtistsAddViewModel : ComicBooksBaseViewModel
     {
         /// <summary>
         /// This property enables model binding to be able to bind the "comicbookid"
@@ -23,7 +23,6 @@ namespace ComicBookLibraryManagerWebApp.ViewModels
             get { return ComicBook.Id; }
             set { ComicBook.Id = value; }
         }
-        public ComicBook ComicBook { get; set; } = new ComicBook();
         [Display(Name = "Artist")]
         public int ArtistId { get; set; }
         [Display(Name = "Role")]
@@ -35,10 +34,12 @@ namespace ComicBookLibraryManagerWebApp.ViewModels
         /// <summary>
         /// Initializes the view model.
         /// </summary>
-        public void Init(Repository repository)
+        public override void Init(Repository repository,
+            SeriesRepository seriesRepository,
+            ArtistsRepository artistsRepository)
         {
             ArtistSelectListItems = new SelectList(
-                repository.GetArtists(),
+                artistsRepository.GetList(),
                 "Id", "Name");
             RoleSelectListItems = new SelectList(
                 repository.GetRoles(),
