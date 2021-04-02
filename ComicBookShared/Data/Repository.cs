@@ -17,28 +17,19 @@ namespace ComicBookShared.Data
             _context = context;
         }
 
-        public IList<ComicBook> GetComicBooks()
+        public IList<Series> GetSeriesList()
         {
-            return _context.ComicBooks
-                .Include(cb => cb.Series)
-                .OrderBy(cb => cb.Series.Title)
-                .ThenBy(cb => cb.IssueNumber)
-                .ToList();
+            return _context.Series.OrderBy(s => s.Title).ToList();
         }
 
-        public ComicBook GetComicBook(int id, bool includeRelatedEntities = true)
+        public IList<Artist> GetArtists()
         {
-            var comicBooks = _context.ComicBooks.AsQueryable();
-            if (includeRelatedEntities)
-            {
-                comicBooks = comicBooks
-                    .Include(cb => cb.Series)
-                    .Include(cb => cb.Artists.Select(a => a.Artist))
-                    .Include(cb => cb.Artists.Select(a => a.Role));
-            }
-            return comicBooks
-                .Where(cb => cb.Id == id)
-                .SingleOrDefault();
+            return _context.Artists.OrderBy(a => a.Name).ToList();
+        }
+
+        public IList<Role> GetRoles()
+        {
+            return _context.Roles.OrderBy(r => r.Name).ToList();
         }
 
         public ComicBookArtist GetComicBookArtist(int id)
@@ -51,57 +42,9 @@ namespace ComicBookShared.Data
                 .SingleOrDefault(); ;
         }
 
-        public void AddComicBook(ComicBook comicBook)
-        {
-            _context.ComicBooks.Add(comicBook);
-
-            if (comicBook.Series != null && comicBook.Series.Id > 0)
-            {
-                _context.Entry(comicBook.Series).State = EntityState.Unchanged;
-            }
-
-            foreach (ComicBookArtist artist in comicBook.Artists)
-            {
-                if (artist.Artist != null && artist.Artist.Id > 0)
-                {
-                    _context.Entry(artist.Artist).State = EntityState.Unchanged;
-                }
-
-                if (artist.Role != null && artist.Role.Id > 0)
-                {
-                    _context.Entry(artist.Role).State = EntityState.Unchanged;
-                }
-            }
-
-            _context.SaveChanges();
-        }
-
         public void AddComicBookArtist(ComicBookArtist comicBookArtist)
         {
             _context.ComicBookArtists.Add(comicBookArtist);
-            _context.SaveChanges();
-        }
-
-        public IList<Series> GetSeriesList() => _context.Series.OrderBy(s => s.Title).ToList();
-
-        public IList<Artist> GetArtists() => _context.Artists.OrderBy(a => a.Name).ToList();
-
-        public IList<Role> GetRoles() => _context.Roles.OrderBy(r => r.Name).ToList();
-
-        public void UpdateComicBook(ComicBook comicBook)
-        {
-            _context.ComicBooks.Attach(comicBook);
-            var comicBookEntry = _context.Entry(comicBook);
-            comicBookEntry.State = EntityState.Modified;
-
-            _context.SaveChanges();
-        }
-
-        public void DeleteComicBook(int id)
-        {
-            var comicBook = new ComicBook() { Id = id };
-            _context.Entry(comicBook).State = EntityState.Deleted;
-
             _context.SaveChanges();
         }
 
@@ -110,22 +53,6 @@ namespace ComicBookShared.Data
             var comicBookArtist = new ComicBookArtist() { Id = id };
             _context.Entry(comicBookArtist).State = EntityState.Deleted;
             _context.SaveChanges();
-        }
-
-        public bool ComicBookSeriesHasIssueNumber(int id, int seriesId, int issueNumber)
-        {
-            return _context.ComicBooks
-                .Any(cb => cb.Id != id &&
-                           cb.SeriesId == seriesId &&
-                           cb.IssueNumber == issueNumber);
-        }
-
-        public bool ComicBookHasArtistRoleCombination(int comicBookId, int artistId, int roleId)
-        {
-            return _context.ComicBookArtists
-                .Any(cba => cba.ComicBookId == comicBookId &&
-                            cba.ArtistId == artistId &&
-                            cba.RoleId == roleId);
         }
     }
 }
