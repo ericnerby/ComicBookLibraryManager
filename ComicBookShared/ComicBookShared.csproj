@@ -54,8 +54,10 @@
     <Compile Include="Data\BaseRepository.cs" />
     <Compile Include="Data\ComicBookArtistsRepository.cs" />
     <Compile Include="Data\ComicBooksRepository.cs" />
+    <Compile Include="Data\Commands\AddComicBookArtistCommand.cs" />
     <Compile Include="Data\Context.cs" />
     <Compile Include="Data\DatabaseInitializer.cs" />
+    <Compile Include="Data\Queries\GetComicBookQuery.cs" />
     <Compile Include="Data\Repository.cs" />
     <Compile Include="Models\Artist.cs" />
     <Compile Include="Models\ComicBook.cs" />
@@ -68,6 +70,7 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
